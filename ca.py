@@ -1,4 +1,3 @@
-import sys
 import contextlib
 with contextlib.redirect_stdout(None):
     import pygame
@@ -6,14 +5,14 @@ with contextlib.redirect_stdout(None):
 
 defaultsize = 20
 
+looparound = True
+
 speed = 15
-deadcell = "□"
-livecell = "■"
 
 pygame.init()
 
 class ca:
-    def __init__(self, handler, initial_state):
+    def __init__(self, handler, initial_state, cellx= defaultsize,celly= defaultsize):
         self.grid = initial_state
         self.updatefunc = handler.updatefunc
         self.colours = handler.cell_colours
@@ -21,20 +20,19 @@ class ca:
         self.t.append(initial_state)
         self.current_t = 0
         
-        self.celly=defaultsize
-        self.cellx=defaultsize
+        self.celly=celly
+        self.cellx=cellx
         
         self.windowy = self.celly*len(self.grid)
         self.windowx = self.cellx*len(self.grid[0])
         
         pygame.display.set_caption("Cellular Automata")
-        self.window = pygame.display.set_mode((self.windowx,self.windowy),vsync=1)
-        self.window.fill(pygame.Color(self.colours[0]))
+        self.window = pygame.display.set_mode((self.windowx,self.windowy))
         self.fps = pygame.time.Clock()
         
     def update(self, show=False):
         if self.current_t == len(self.t)-1:
-            self.grid = self.updatefunc(self.grid)
+            self.grid = self.updatefunc(self.grid, looparound)
             self.t.append(self.grid)
             self.current_t += 1
         else:
@@ -43,12 +41,15 @@ class ca:
         
         for event in pygame.event.get():
             if event.type == QUIT:
-                pygame.quit()
-                sys.exit()
+                pygame.display.quit()
+                raise Exception("Quitting")
+
         if show:
             self.show()
              
     def rewind(self, t):
+        if not pygame.display.get_init():
+            self.window = pygame.display.set_mode((self.windowx,self.windowy))
         self.current_t = t
         self.grid = self.t[t]
 
@@ -57,7 +58,6 @@ class ca:
         #print("\n".join(" ".join(i) for i in grid))
         for y in range(0, self.windowy, self.celly):
             for x in range(0, self.windowx, self.cellx):
-                pygame.draw.rect(self.window, pygame.Color(self.colours[self.grid[y//self.celly][x//self.cellx]]), pygame.Rect(x,y,self.cellx,self.celly))
+                pygame.draw.rect(self.window, self.colours(self.grid[y//self.celly][x//self.cellx]), pygame.Rect(x,y,self.cellx,self.celly))
         pygame.display.update()
         self.fps.tick(speed)
-        
