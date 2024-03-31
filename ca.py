@@ -5,20 +5,20 @@ with contextlib.redirect_stdout(None):
 
 defaultsize = 20
 
-looparound = True
-
 speed = 15
 
 pygame.init()
 
 class ca:
-    def __init__(self, handler, initial_state, cellx= defaultsize,celly= defaultsize):
+    def __init__(self, handler, initial_state, looparound=True, cellx= defaultsize,celly= defaultsize):
         self.grid = initial_state
         self.updatefunc = handler.updatefunc
         self.colours = handler.cell_colours
         self.t = []
         self.t.append(initial_state)
         self.current_t = 0
+
+        self.looparound = looparound
         
         self.celly=celly
         self.cellx=cellx
@@ -32,7 +32,7 @@ class ca:
         
     def update(self, show=False):
         if self.current_t == len(self.t)-1:
-            self.grid = self.updatefunc(self.grid, looparound)
+            self.grid = self.updatefunc(self.grid, self.looparound)
             self.t.append(self.grid)
             self.current_t += 1
         else:
@@ -58,6 +58,11 @@ class ca:
         #print("\n".join(" ".join(i) for i in grid))
         for y in range(0, self.windowy, self.celly):
             for x in range(0, self.windowx, self.cellx):
-                pygame.draw.rect(self.window, self.colours(self.grid[y//self.celly][x//self.cellx]), pygame.Rect(x,y,self.cellx,self.celly))
+                pygame.draw.rect(self.window, colour:=self.colours(self.grid[y//self.celly][x//self.cellx]), pygame.Rect(x,y,self.cellx,self.celly))
+                try:
+                    if colour[2] != 0:
+                        print(colour, x, y)
+                except Exception:
+                    print(colour)
         pygame.display.update()
         self.fps.tick(speed)
