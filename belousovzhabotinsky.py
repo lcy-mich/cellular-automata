@@ -13,10 +13,10 @@ where S is the sum of the states of the cell and its neighbors and c is the numb
 (vii) If the application of rule (v) or rule (vi) would result in a cell having a state > q then the state of that cell becomes q.
 '''
 
-q = 255
-k1 = 8
-k2 = 8
-g = 20
+q = 200
+k1 = 2
+k2 = 2
+g = 28
 
 def total_neighbours(neighbours):
     total = 0
@@ -57,7 +57,7 @@ def get_neighbours(x,y,grid,looparound):
 
 class bz:
 
-    cell_colours = lambda x : (x,x,0) if x < 255 else (255,255,0)
+    cell_colours = lambda x : (255-(x//2),255-x,255-x) 
 
     def updatefunc(grid, looparound = True):
         new_grid = [[1 for _ in range(len(grid[0]))] for _ in range(len(grid))]

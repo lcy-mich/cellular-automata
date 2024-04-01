@@ -58,11 +58,7 @@ class ca:
         #print("\n".join(" ".join(i) for i in grid))
         for y in range(0, self.windowy, self.celly):
             for x in range(0, self.windowx, self.cellx):
-                pygame.draw.rect(self.window, colour:=self.colours(self.grid[y//self.celly][x//self.cellx]), pygame.Rect(x,y,self.cellx,self.celly))
-                try:
-                    if colour[2] != 0:
-                        print(colour, x, y)
-                except Exception:
-                    print(colour)
+                pygame.draw.rect(self.window, self.colours(self.grid[y//self.celly][x//self.cellx]), pygame.Rect(x,y,self.cellx,self.celly))
+
         pygame.display.update()
         self.fps.tick(speed)
