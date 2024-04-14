@@ -25,13 +25,18 @@ class CellType(Enum):
         }[self]
 
 def main(catype):
-    initial_state = [[(1 if randint(1,200) == 1 else 150) for _ in range(150)] for _ in range(150)]
+    # initial_state = [[(1 if randint(1,200) == 1 else 150) for _ in range(50)] for _ in range(50)]
+    # initial_state = [[(randint(1,150)) for _ in range(50)] for _ in range(50)]
+
+    initial_state = [[0 for _ in range(101)] for _ in range(101)]
+    for _ in range(10):
+        initial_state[randint(0,100)][randint(0,100)] = 200
 
     cell = None
     for celltype in CellType:
         if catype in celltype.aliases:
             cell = celltype.class_of()
-            break
+            
     
     #initial_state[155][155]=initial_state[156][156]=initial_state[157][155]=initial_state[157][156]=initial_state[157][154] =  1
     
@@ -41,7 +46,7 @@ def main(catype):
 
     #initial_state[0][0] = 250
     
-    cellularauto = ca(cell, initial_state, True, 2,2)
+    cellularauto = ca(cell, initial_state, False, 5,5)
     cellularauto.show()
 
     while True:
